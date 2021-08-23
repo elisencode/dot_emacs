@@ -5,7 +5,8 @@
 * Link
   Specify links `C-c C-l`
   - [[https://github.com/zamansky/dot-emacs][Github - zamansky]]
-  - [[https://cestlaz.github.io/stories/emacs/][Mike Zamansky - Using Emacs Series]]  
+  - [[https://cestlaz.github.io/stories/emacs/][Mike Zamansky - Using Emacs Series]]
+  - [[https://github.com/ELISENCODE/dot_emacs][GitHub - ELISENCODE/dot_emacs]]
 
 * Lesson 1
 ** Part 1  
