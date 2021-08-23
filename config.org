@@ -430,6 +430,11 @@ Type 25
 #+END_SRC
 
 * buffers
+#+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer)
+  ;;   (defalias 'list-buffers 'ibuffer-other-window)
+#+END_SRC
+
 ** kill all buffers
 Keybinding Control+Meta+Super+k
 #+BEGIN_SRC emacs-lisp
