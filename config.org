@@ -231,7 +231,9 @@ Super + Enter opens a new terminal
   (global-set-key (kbd "<s-return>") 'ansi-term)
 #+END_SRC
 
-* Try  
+* Try
+`M-x try`
+
 Try is a package that allows you to try out Emacs packages without
 installing them. If you pass a URL to a plain text `.el`-file it evaluates
 the content, without storing the file.
@@ -430,11 +432,7 @@ Type 25
 #+END_SRC
 
 * buffers
-#+BEGIN_SRC emacs-lisp
-  (defalias 'list-buffers 'ibuffer)
-  ;;   (defalias 'list-buffers 'ibuffer-other-window)
-#+END_SRC
-
+`C-x b` buffers.
 ** kill all buffers
 Keybinding Control+Meta+Super+k
 #+BEGIN_SRC emacs-lisp
@@ -459,11 +457,26 @@ Keybinding Control+Meta+Super+k
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
+ibuffer for delete buffers: lowercase `D` delete, lowercase `X` execute.
+#+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer)
+  ;;   (defalias 'list-buffers 'ibuffer-other-window)
+#+END_SRC
+
 ** expert
 #+BEGIN_SRC emacs-lisp
   (setq ibuffer-expert t)
 #+END_SRC
 
+* tabbar
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tabbar
+    :ensure t
+    :config
+    (tabbar-mode 1))
+#+END_SRC
+  
 * avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
