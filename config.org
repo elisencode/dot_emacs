@@ -3,17 +3,146 @@
 #+CREATOR: EliseN Learns from Dawid 'daedreth' Eckert
 #+LANGUAGE: en
 #+OPTIONS: num:nil
+      _ _                              _
+  ___| (_)___  ___ _ __   ___ ___   __| | ___
+ / _ \ | / __|/ _ \ '_ \ / __/ _ \ / _` |/ _ \
+|  __/ | \__ \  __/ | | | (_| (_) | (_| |  __/
+ \___|_|_|___/\___|_| |_|\___\___/ \__,_|\___|
+
 * Some notes
-Specify links `C-c C-l`  
+Specify links `C-c C-l`
 [[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org][GitHub UncleDavesEmacs]]
 
 ** On the keybinding
-I do my best to not pollute keymaps with my own keybindings. 
-Most of the bindings I defined myself utilize the Super key (noted as s-). 
-This is the least used modifier key together with Shift (noted as S-), 
-thus using those, chances are 
+I do my best to not pollute keymaps with my own keybindings.
+Most of the bindings I defined myself utilize the Super key (noted as s-).
+This is the least used modifier key together with Shift (noted as S-),
+thus using those, chances are
 all the bindings you already know and love are going to work flawlessly.
 For all the others, just keep on reading.
+
+* Structure
+This is a structure.
+
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+
+** Element
+   This is another one
+   #+BEGIN_SRC emacs-lisp
+
+   #+END_SRC
+
+* Display Key and Command in Real Time
+<https://emacs.stackexchange.com/questions/58730/display-keybindings-typed-in-a-buffer>
+<http://ergoemacs.org/emacs/emacs_show_key_and_command.html>
+<http://xahlee.info/talk_show/xah_talk_show_2019-11-03.html>
+
+- Turns the mode on, and turn on logging current buffer: `M-x
+command-log-mode`
+- Optional. Turn on logging for any buffer: `M-x
+global-command-log-mode`
+- Show the key/command output buffer: `M-x clm/open-command-log-buffer`
+
+#+BEGIN_SRC emacs-lisp
+  (require 'command-log-mode)
+  (add-hook 'python-mode-hook 'command-log-mode)
+
+  ;; first, do
+  ;; M-x command-log-mode
+  ;; then, if u want global, do
+  ;; M-x global-command-log-mode
+  ;; then
+  ;; M-x clm/open-command-log-buffer to show the log buffer.
+
+  ;(command-log-mode)
+  ;(gobal-command-log-mode)
+  ;(clm/open-command-log-buffer)
+#+END_SRC
+
+* Soft vs Hard word wrap in Emacs
+** Hard: Actually edit the file to have lines of a maximum lengh.
+- `auto-fill-mode` (and/or `refill-mode`) for the hard-wrap
+- The default maximum line width is 70, determinded by the varialbe
+  `fill-column.`
+- If you keep hitting `M-q` to fill your paragraphs (see
+  FillParagraph), then `auto-fill-mode` is for you.
+- Unintended differences that will clutter the communication between
+  co-authors. This is why I use `auto-fill-mode` alot, and
+  `refill-mode` very rarely
+
+#+BEGIN_SRC emacs-lisp
+  ;; To turn it on for every buffer in a certern mode, you must use the hook for that mode.
+  ;; For example, to turn on `auto-fill' mode for all text buffers
+  ;(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+  ;; Turn `autofill' mode on in all major modes
+  (setq-default auto-fill-function 'do-auto-fill)
+#+END_SRC
+
+** Soft: Just wrap in the editor, but the underlying file still has long lines.
+- `visual-line-mode` for the soft-wrap
+
+- VisualLineMode wrap a line right before the window edge, but
+ultimately they do not alter the buffer text. VisualLineMode wrapping
+is essentially a display effect.
+
+#+BEGIN_SRC emacs-lisp
+     (global-visual-line-mode 1) ; 1 for on, 0 for off.
+#+END_SRC
+
+* Emacs: Make Whitespaces Visible
+- Make whitespaces visible {spaces, tabs, newlines}
+
+-`C-u C-x =` (the command `what-cursor-position` with a prefix
+  argument), which displays lots of information about whatever's under
+  the cursor, including its current face.
+
+- `M-x whitespace-mode` make whitespace visible. Toggle on/off, for
+  current file.
+- `M-x global-whitespace-mode` Do in every buffer
+- `M-x whitespace-nexline-mode` Make just newline character visible.
+- `M-x global-whitespace-newline-mode` Do it in every buffer
+
+#+BEGIN_SRC emacs-lisp
+  ;; To use WhiteSpace
+  ;(require 'whitespace)
+
+  ;; Activate this mode globally for all buffers
+  ;(global-whitespace-mode 1)
+#+END_SRC
+
+* Whitespace Cleanup
+`M-x whitespace-cleanup`
+
+* Highligh and remove extraneous whitespace
+  <https://shallowsky.com/blog/linux/editors/emacs-trailing-spaces.html>
+- Show trailing whitespace:`M-x whitespace-mode`
+- Delete trailing whitespace:
+  - `M-x delete-trailing-whitespace` or
+  - PictureModeTrailingWhitespaceTrick:`M-x picture-mode` then type
+    `C-c C-c` to exite picture
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq tabify nil)
+
+  ;; Highlight trailing whitespace.
+  ;(setq-default show-trailing-whitespace t)
+  ;(set-face-background 'trailing-whitespace "yellow")
+
+  ;; Also show tabs
+  (defface extra-whitespace-face
+    '((t (:background "pale green")))
+    "Color for tabs and such.")
+
+  (defvar bad-whitespace-face
+    '(("\t" . 'extra-whitespace-face)))
+
+  ;; Stop worrying about trailing whitespace
+  (add-hook 'before-save-hook 'delete-traiing-whitespace)
+#+END_SRC
 
 * Minor setting
 ** Display line numbers
@@ -29,7 +158,7 @@ Show lines and columns for your cursor on the modeline
 #+END_SRC
 
 ** Remove lame startup screen
-We use an actual replacement for it, 
+We use an actual replacement for it,
 keep reading or head directy to `dashboard`.
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)
@@ -66,11 +195,11 @@ This turns on the clock globally.
 ** electric
 #+BEGIN_SRC emacs-lisp
   (setq electric-pair-pairs '(
-			      (?\{ . ?\})
-			      (?\( . ?\))
-			      (?\[ . ?\])
-			      (?\" . ?\")
-			      ))
+                              (?\{ . ?\})
+                              (?\( . ?\))
+                              (?\[ . ?\])
+                              (?\" . ?\")
+                              ))
   (electric-pair-mode t)
 #+END_SRC
 
@@ -100,7 +229,7 @@ This turns on the clock globally.
 #+END_SRC
 
 ** pretty symbols
-Change `lambda` to an actual symbol an a few others as well, only in the GUI 
+Change `lambda` to an actual symbol an a few others as well, only in the GUI
 version though
 #+BEGIN_SRC emacs-lisp
   ; (when window-system
@@ -137,7 +266,7 @@ happer to not like `exwm`
       ;; necessary to configure exwm manually
       (require 'exwm-config)
 
-      ;; fringe size, most people prefer 1 
+      ;; fringe size, most people prefer 1
       (fringe-mode 3)
 
       ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
@@ -237,12 +366,12 @@ Super + Enter opens a new terminal
 Try is a package that allows you to try out Emacs packages without
 installing them. If you pass a URL to a plain text `.el`-file it evaluates
 the content, without storing the file.
-  
+
 #+BEGIN_SRC emacs-lisp
   (use-package try
     :ensure t)
 #+END_SRC
-  
+
 * which-key
   Suggestions for completing the command
 #+BEGIN_SRC emacs-lisp
@@ -253,7 +382,7 @@ the content, without storing the file.
 #+END_SRC
 
 * Expand region
-A simple package, takes your cursor and semantically expands the region, so 
+A simple package, takes your cursor and semantically expands the region, so
 words, sentences, maybe the contents of some parentheses.
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
@@ -320,7 +449,7 @@ suit your liking, I find 5 to be enough.
 #+END_SRC
 
 * dmenu
-Together with ido-vertical it's a nice large menu with its own cache for most 
+Together with ido-vertical it's a nice large menu with its own cache for most
 lauched applications.
 `SUPER + SPACE`
 Ex: if `s-SPC` not working, to launch Firefox: `M-x dmenu` then type `firefox`
@@ -331,7 +460,7 @@ Ex: if `s-SPC` not working, to launch Firefox: `M-x dmenu` then type `firefox`
 #+END_SRC
 
 * System monitor
-A teeny-tiny system monitor that can be enable or disable at runtime, useful 
+A teeny-tiny system monitor that can be enable or disable at runtime, useful
 for checking performance with power-hungry processes in ansi-term
 ** symon
 symon can be toggled on and off with `Super + h`.
@@ -365,8 +494,9 @@ Ex: if `s-h` not working, type `M-x symon` to launch it.
 #+END_SRC
 
 ** Line wrapping
+
 #+BEGIN_SRC emacs-lisp
-  ; (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
+  (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
 #+END_SRC
 
 ** Keybindings
@@ -375,7 +505,7 @@ Ex: if `s-h` not working, type `M-x symon` to launch it.
 #+END_SRC
 
 ** Easy-to-add emacs-lisp template
-Hitting TAB after an "<el" in an org-mode file will create a template for 
+Hitting TAB after an "<el" in an org-mode file will create a template for
 elisp insertion.
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
@@ -398,14 +528,15 @@ Type 25
   (require 'org)
   (setq org-clock-sound "~/Music/ding.wav")
 #+END_SRC
-   
+
 * IDO
 ** enable ido mode
 #+BEGIN_SRC emacs-lisp
-  (setq ido-enable-flex-matching nil)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-everywhere t)
-  (ido-mode 1)
+  ;; using swiper so ido no longer needed
+  ;;(setq ido-enable-flex-matching nil)
+  ;;(setq ido-create-new-buffer 'always)
+  ;;(setq ido-everywhere t)
+  ;;(ido-mode 1)
 #+END_SRC
 
 ** ido-vertical
@@ -476,7 +607,7 @@ ibuffer for delete buffers: lowercase `D` delete, lowercase `X` execute.
     :config
     (tabbar-mode 1))
 #+END_SRC
-  
+
 * avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
@@ -514,8 +645,8 @@ edit them all at once.
     (save-excursion
       (kill-new
        (buffer-substring
-	(point-at-bol)
-	(point-at-eol)))))
+        (point-at-bol)
+        (point-at-eol)))))
   (global-set-key (kbd "C-c l c") 'daedreth/copy-whole-line)
 #+END_SRC
 
@@ -573,7 +704,7 @@ useful for any language using them, especially lisp.
     (setq switch-window-threshold 2)
     (setq switch-window-shortcut-style 'qwerty)
     (setq switch-window-qwerty-shortcut
-	  '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
     :bind
     ([remap other-window] . switch-window))
 #+END_SRC
@@ -597,10 +728,46 @@ useful for any language using them, especially lisp.
 
 * swiper
 #+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :bind ("C-s" . 'swiper))
+  ;(use-package swiper
+  ;  :ensure t
+  ;  :bind ("C-s" . 'swiper))
 #+END_SRC
+
+** counsel, swiper, ivy-mode
+   Part of the Swiper package includes ivy and counsel which i use
+   instead of ido. -Learn from: Mike Zamansky.
+   <https://cestlaz.github.io/posts/using-emacs-6-swiper/>
+
+   #+BEGIN_SRC emacs-lisp
+    ;; it looks like counsel is a requirement for swiper
+    (use-package counsel
+    :ensure t
+    )
+
+    (use-package swiper
+    :ensure try
+    :config
+    (progn
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-c C-r") 'ivy-resume)
+    (global-set-key (kbd "<f6>") 'ivy-resume)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    (global-set-key (kbd "<f1> l") 'counsel-load-library)
+    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    (global-set-key (kbd "C-c g") 'counsel-git)
+    (global-set-key (kbd "C-c j") 'counsel-git-grep)
+    (global-set-key (kbd "C-c k") 'counsel-ag)
+    (global-set-key (kbd "C-x l") 'counsel-locate)
+    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+    (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+    ))
+  #+END_SRC
 
 * auto completion
 
@@ -610,7 +777,7 @@ useful for any language using them, especially lisp.
       :ensure t
       :config
       (use-package yasnippet-snippets
-	:ensure t)
+        :ensure t)
       (yas-reload-all))
   #+END_SRC
   (use-package yasnippet
@@ -621,7 +788,7 @@ useful for any language using them, especially lisp.
       (yas-reload-al
 
 ** company mode
-I set the delay for company mode to kick in to half a second, I also make sure 
+I set the delay for company mode to kick in to half a second, I also make sure
 that it stars doing its magic after typing in only 2 characters.
 `C-n` and `C-p` to move around the items.
 #+BEGIN_SRC emacs-lisp
@@ -711,6 +878,28 @@ Each category also has additional settings.
       (add-hook 'python-mode-hook 'python-mode-company-init))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  ;(setq jedi:server-command '("~/.emacs.d/.python-environments/default/bin/jediepcserver.py"))
+#+END_SRC
+
+** python-mode
+*** Initialise
+Make sure the directory, where python-mode.el resides, is in load-path
+
+#+BEGIN_SRC emacs-lisp
+  ;(setq py-install-directory "~/.emacs/PYTHON-MODE/")
+  ;(add-to-list 'load-path py-install-directory)
+  ;(require 'python-mode)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package python-mode
+    :ensure t
+  ;  :hook (python-mode . lsp-deferred)
+    :custom
+    (python-shell-interpreter "python3"))
+#+END_SRC
+
 ** emacs-lisp
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
@@ -785,26 +974,26 @@ I'll be using the following snippet for evaluating code in the REPL:
       (forward-line 1))
     (backward-char 1)
     (let ((text (buffer-substring-no-properties (region-beginning)
-						(region-end))))
+                                                (region-end))))
       (with-current-buffer "*ielm*"
-	(insert text)
-	(ielm-send-input))
-  
+        (insert text)
+        (ielm-send-input))
+
       (deactivate-mark)))
-  
+
   (defun efs/show-ielm ()
     (interactive)
     (select-window (split-window-vertically -10))
     (ielm)
     (text-scale-set 1))
-  
+
   (define-key org-mode-map (kbd "C-c C-e") 'efs/ielm-send-line-or-region)
   (define-key org-mode-map (kbd "C-c E") 'efs/show-ielm)
 #+END_SRC
 
 * Media
 ** EMMS with mpd
-mpd: music player daemon: sits in the background, point it to a audio output, 
+mpd: music player daemon: sits in the background, point it to a audio output,
 point it to your music directory and it does nothing unless connect to it with
 a client and then actually tell it what to do.
 mpc: music player client: to add songs, to play songs
@@ -892,24 +1081,24 @@ Creating a project template
     (org-roam-completion-everywhere t)
     (org-roam-capture-templates
      '(("d" "default" plain "%?"
-	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
-	:unnarrowed t)
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+        :unnarrowed t)
        ("l" "programming language" plain
-	"* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-	:unnarrowed t)
+        "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+        :unnarrowed t)
        ("b" "book notes" plain
-	(file "~/RoamNotes/Templates/BookNoteTemplate.org")
-	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-	:unnarrowed t)
+        (file "~/RoamNotes/Templates/BookNoteTemplate.org")
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+        :unnarrowed t)
        ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
-	:unnarrowed t)))
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
+        :unnarrowed t)))
     :bind (("C-c n l" . org-roam-buffer-toggle)
-	   ("C-c n f" . org-roam-node-find)
-	   ("C-c n i" . org-roam-node-insert)
-	   :map org-mode-map
-	   ("C-M-i" . completion-at-point))
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           :map org-mode-map
+           ("C-M-i" . completion-at-point))
     :config
     (org-roam-setup))
 #+END_SRC

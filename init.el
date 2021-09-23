@@ -19,6 +19,11 @@
 
 ;;; ----------
 
+;;; ---------   -----------
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+;;; ---------   -----------
 
 ;;; ---------- Actual Config File ----------
 
@@ -55,7 +60,7 @@
  '(custom-safe-themes
    '("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
  '(package-selected-packages
-   '(try magit org-roam yasnippet-snippets yasnippet company-shell slime-company slime company-irony company-c-headers flycheck-clang-analyzer company-jedi pretty-mode expand-region mark-multiple swiper emms popup-kill-ring exwm symon dmenu diminish spaceline company rainbow-delimiters sudo-edit hungry-delete switch-window rainbow-mode avy smex ido-vertical-mode ido-verticle-mode org-bullets beacon spacemacs-theme which-key use-package)))
+   '(command-log-mode python-mode eterm-256color virtualenv jedi-direx lorem-ipsum live-py-mode counsel ace-window try magit org-roam yasnippet-snippets yasnippet company-shell slime-company slime company-irony company-c-headers flycheck-clang-analyzer company-jedi pretty-mode expand-region mark-multiple swiper emms popup-kill-ring exwm symon dmenu diminish spaceline company rainbow-delimiters sudo-edit hungry-delete switch-window rainbow-mode avy smex ido-vertical-mode ido-verticle-mode org-bullets beacon spacemacs-theme which-key use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
